@@ -1,12 +1,33 @@
 <?php
 class Database {
-    private $pdo;
+    private $pdos = [];
+    private $connectionName;
 
-    public function __construct($dbname, $username, $password) 
+    public function __construct(array $config)
     {
-        $this->pdo = new PDO("mysql:host=localhost:3306;dbname=$dbname", $username, $password, [
+        foreach($config as $name => $conf) {
+            $this->connect($name, $conf['dbname'], $conf['username'], $conf['password']);
+        }
+    }
+
+    public function in(string $connectionName)
+    {
+        $this->connectionName = $connectionName;
+        return $this;
+    }
+
+    public function connect(string $connectionName, string $dbname, string $username, string $password) : void
+    {
+        $this->pdos[$connectionName] = new PDO("mysql:host=localhost:3306;dbname=$dbname", $username, $password, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ]);
+    }
+
+    public function getPDO() {
+        if(!isset($this->pdos[$this->connectionName])) {
+            throw new InvalidArgumentException("La connexion n'existe pas");
+        }
+        return $this->pdos[$this->connectionName];
     }
     /**
      * Crée une ressource dans la BDD
@@ -58,7 +79,7 @@ class Database {
             array_values($wheres) // ["Action"]
         );
 
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = $this->getPDO()->prepare($sql);
         $stmt->execute($arguments);
         return $stmt->rowCount();
 
@@ -85,11 +106,33 @@ class Database {
             // Non.
             throw new InvalidArgumentException("Une table ne doit pas avoir d'espace");
         }
+        
+        // Système de cache : nom du fichier contenant les résultats de la requête
+        //$filename = realpath('.') . DIRECTORY_SEPARATOR . md5($table) . ".cache.txt";
+        // Si ce fichier existe, on renvoie son contenu
+        // if(file_exists($filename)) {
+        //     return json_decode(file_get_contents($filename));
+        // }
 
         // SELECT * FROM [table]
-        $stmt = $this->pdo->prepare("SELECT * FROM " . $table);
+        $stmt = $this->getPDO()->prepare("SELECT * FROM " . $table);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // On stocke le contenu de la requête dans un fichier
+        // pour accélérer les requêtes suivantes
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        //file_put_contents($filename, json_encode($results));
+
+        // On retourne les résultats
+        return $results;
+    }
+
+    public function listClass(string $table, string $className) : array
+    {
+        // Sans système de cache pour ne pas complexifier
+        $stmt = $this->getPDO()->prepare("SELECT * FROM " . $table);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_CLASS, $className);
     }
     /**
      * Exécute une requête SQL DML "en brut" dans la BDD
@@ -97,7 +140,7 @@ class Database {
      */
     public function rawSelect(string $sql, array $args = []) : array
     {
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = $this->getPDO()->prepare($sql);
         $stmt->execute($args);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -107,7 +150,7 @@ class Database {
      * Data Definition Language
      */
     public function rawAlter($sql, $args = []) {
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = $this->getPDO()->prepare($sql);
         return $stmt->execute($args);
         // Pas de fetch ou fetchAll ici, il s'agit de création/modification de table
     }
