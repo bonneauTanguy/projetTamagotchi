@@ -52,3 +52,5 @@ function migrate($db)
     ");
     $migration->execute();
 }
+?>
+<?php require_once('screens/login.php') ?>
