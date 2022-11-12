@@ -55,6 +55,9 @@ function migrate($db)
     );");
     $migration->execute();
 }
-migrate($db);
+/**
+ * On execute tout d'abord avec migrate($db);puis on peut le commenter :)  
+ */
+//migrate($db); 
 ?>
 <?php require_once('screens/login.php') ?>
