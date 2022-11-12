@@ -8,7 +8,7 @@ require_once('./Migration.class.php');
 $db = new Database([
     "projet_tama" => [
         "username" => "root",
-        "password" => "",
+        "password" => "flycombo123",
         "dbname" => "projet_tama"
     ]
 ]);
