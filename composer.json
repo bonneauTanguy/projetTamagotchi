@@ -1,5 +1,5 @@
 {
     "require": {
-        "phpunit/php-timer": "^5.0"
+        "fakerphp/faker": "^1.20"
     }
 }

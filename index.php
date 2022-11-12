@@ -1,8 +1,8 @@
 <?php
 require_once('./vendor/autoload.php');
 
-require_once('./Database.class.php');
-require_once('./Migration.class.php');
+require_once('./bdd/Database.class.php');
+require_once('./bdd/Migration.class.php');
 
 // Point de départ, création des migrations
 $db = new Database([
@@ -52,7 +52,3 @@ function migrate($db)
     ");
     $migration->execute();
 }
-?>
-<div id="welcome">
-</div>
-<?php require_once('screens/login.php') ?>
