@@ -21,7 +21,8 @@ function migrate($db)
         user_id INT,
         username VARCHAR(50),
         PRIMARY KEY(user_id)
-    );")->addQuery("CREATE TABLE Tamagotshi(
+    );")
+    ->addQuery("CREATE TABLE Tamagotshi(
         Tamagotshi_id INT,
         name VARCHAR(50),
         level INT,
@@ -35,22 +36,25 @@ function migrate($db)
         user_id INT NOT NULL,
         PRIMARY KEY(Tamagotshi_id),
         FOREIGN KEY(user_id) REFERENCES Users(user_id)
-    );")->addQuery("CREATE TABLE Actions(
+    );")
+    ->addQuery("CREATE TABLE Actions(
        action_id INT,
        name VARCHAR(50),
        action_date DATETIME,
        Tamagotshi_id INT NOT NULL,
        PRIMARY KEY(action_id),
        FOREIGN KEY(Tamagotshi_id) REFERENCES Tamagotshi(Tamagotshi_id)
-    );")->addQuery("CREATE TABLE Death(
+    );")
+    ->addQuery("CREATE TABLE Death(
         death_id VARCHAR(50),
         death_date DATE,
         Tamagotshi_id INT NOT NULL,
         PRIMARY KEY(death_id),
         UNIQUE(Tamagotshi_id),
         FOREIGN KEY(Tamagotshi_id) REFERENCES Tamagotshi(Tamagotshi_id)
-    ");
+    );");
     $migration->execute();
 }
+migrate($db);
 ?>
 <?php require_once('screens/login.php') ?>
