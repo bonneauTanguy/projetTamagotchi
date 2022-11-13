@@ -4,3 +4,8 @@ Procedures a appeler =
 * Call (la vue où le user aura ses tamagochis)
 * Call la procedure pour creer des tamagochis
 */
+
+<html>
+    <H1>hello</H1>
+    
+</html>

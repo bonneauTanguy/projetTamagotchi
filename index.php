@@ -4,11 +4,12 @@ require_once('./vendor/autoload.php');
 require_once('./bdd/Database.class.php');
 require_once('./bdd/Migration.class.php');
 
+
 // Point de départ, création des migrations
 $db = new Database([
     "projet_tama" => [
         "username" => "root",
-        "password" => "flycombo123",
+        "password" => "29031999",
         "dbname" => "projet_tama"
     ]
 ]);
@@ -25,10 +26,9 @@ function migrate($db)
     ->addQuery("CREATE TABLE Tamagotshi(
         Tamagotshi_id INT,
         name VARCHAR(50),
-        level INT DEFAULT 0,
-        creation_date DATETIME DEFAULT GETDATE(),
-        death_date DATETIME,
-        action_number INT DEFAULT 0,
+        level INT,
+        creation_date DATETIME,
+        action_number INT,
         hunger INT DEFAULT 70,
         thirst INT DEFAULT 70,
         sleep INT DEFAULT 70,
@@ -47,7 +47,7 @@ function migrate($db)
     );")
     ->addQuery("CREATE TABLE Death(
         death_id VARCHAR(50),
-        death_date DATE,
+        death_date DATETIME,
         Tamagotshi_id INT NOT NULL,
         PRIMARY KEY(death_id),
         UNIQUE(Tamagotshi_id),
@@ -60,4 +60,4 @@ function migrate($db)
  */
 //migrate($db); 
 ?>
-<?php require_once('screens/login.php') ?>
+<?php require_once('./vues/v_loginregister.php'); ?>

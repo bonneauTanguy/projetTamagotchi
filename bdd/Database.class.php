@@ -154,6 +154,7 @@ class Database {
         return $stmt->execute($args);
         // Pas de fetch ou fetchAll ici, il s'agit de création/modification de table
     }
+    
     //creation d'un compte
     public function create_account(string $username)
     {

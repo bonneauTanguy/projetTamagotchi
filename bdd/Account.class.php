@@ -1,7 +1,7 @@
 <?php
 require_once('./bdd/Database.class.php');
 
-class Migration
+class Account
 {
     private array $queries = [];
     private Database $db;
@@ -12,7 +12,7 @@ class Migration
         $this->db = $db;
     }
 
-    public function addQuery(string $query): Migration
+    public function addQuery(string $query): Account
     {
         $this->queries[] = $query;
         return $this;
@@ -25,4 +25,9 @@ class Migration
         }
     }
 
+    public function next() : void
+    {
+        $this->db->rawAlter($this->queries[$this->i]);
+        $this->i++;
+    }
 }
