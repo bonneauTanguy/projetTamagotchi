@@ -5,15 +5,6 @@ session_start();
 // Create database connection using config file
 include_once("./bdd/Database.class.php");
 
-$db = new Database([
-    "projet_tama" => [
-        "username" => "root",
-        "password" => "29031999",
-        "dbname" => "projet_tama"
-    ]
-]);
-$db->in('projet_tama');
-
 // If form submitted, collect username form
 if (isset($_POST['login'])) {
     $username    = $_POST['username'];

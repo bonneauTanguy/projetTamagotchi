@@ -21,13 +21,12 @@
 
         </tr>
     </thead>
-   
         <tr>
             <td>TAmTAM</td>
-            <td><?php //drink(); ?> 70</td>
-            <td><?php //eat(); ?>70</td>
-            <td><?php //bedtime(); ?>70</td>
-            <td><?php //enjoy();?>70</td>
+            <td><?php require_once ("./bdd/Database.class.php"); //drink(); ?> 70</td> 
+            <td><?php require_once ("./bdd/Database.class.php"); //eat(); ?>70</td>
+            <td><?php require_once ("./bdd/Database.class.php"); //bedtime(); ?>70</td>
+            <td><?php require_once ("./bdd/Database.class.php"); //enjoy();?>70</td>
             <td><input class='myclass' type='button' value='Delete'/></td>
             
 
@@ -53,3 +52,10 @@
 </body>    
 </div>
 </html>
+
+<?php
+/*
+* here we try to call the create account function We have followed your example 
+* with migrate and some examples on the internet but unfortunately it does not work
+*/
+?>

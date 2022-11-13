@@ -14,6 +14,9 @@ $db = new Database([
 $db->in('projet_tama');
 
 // create_account($username, $name);
+/* here we try to call the create account function We have followed your example with 
+*  migrate and some examples on the internet but unfortunately it does not work :) 
+*/
 ?>
 
 <html>
