@@ -8,7 +8,7 @@ require_once('./bdd/Migration.class.php');
 $db = new Database([
     "projet_tama" => [
         "username" => "root",
-        "password" => "29031999",
+        "password" => "flycombo123",
         "dbname" => "projet_tama"
     ]
 ]);
@@ -25,10 +25,10 @@ function migrate($db)
     ->addQuery("CREATE TABLE Tamagotshi(
         Tamagotshi_id INT,
         name VARCHAR(50),
-        level INT,
-        creation_date DATETIME,
-        eath_date DATETIME,
-        action_number INT,
+        level INT DEFAULT 0,
+        creation_date DATETIME DEFAULT GETDATE(),
+        death_date DATETIME,
+        action_number INT DEFAULT 0,
         hunger INT DEFAULT 70,
         thirst INT DEFAULT 70,
         sleep INT DEFAULT 70,
