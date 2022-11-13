@@ -8,8 +8,8 @@ require_once('./bdd/Migration.class.php');
 // Point de départ, création des migrations
 $db = new Database([
     "projet_tama" => [
-        "username" => "root",
-        "password" => "29031999",
+        "username" => "",
+        "password" => "",
         "dbname" => "projet_tama"
     ]
 ]);
@@ -19,15 +19,15 @@ function migrate($db)
 {
     $migration = new Migration($db);
     $migration->addQuery("CREATE TABLE Users(
-        user_id INT,
+        user_id INT AUTO_INCREMENT,
         username VARCHAR(50),
         PRIMARY KEY(user_id)
     );")
     ->addQuery("CREATE TABLE Tamagotshi(
-        Tamagotshi_id INT,
+        Tamagotshi_id INT AUTO_INCREMENT,
         name VARCHAR(50),
-        level INT DEFAULT 0,
-        creation_date DATETIME DEFAULT GETDATE(),
+        level INT DEFAULT 1,
+        creation_date DATETIME DEFAULT NOW(),
         action_number INT DEFAULT 0,
         hunger INT DEFAULT 70,
         thirst INT DEFAULT 70,
@@ -38,15 +38,15 @@ function migrate($db)
         FOREIGN KEY(user_id) REFERENCES Users(user_id)
     );")
     ->addQuery("CREATE TABLE Actions(
-       action_id INT,
+       action_id INT AUTO_INCREMENT,
        name VARCHAR(50),
-       action_date DATETIME DEFAULT GETDATE(),
+       action_date DATETIME DEFAULT NOW(),
        Tamagotshi_id INT NOT NULL,
        PRIMARY KEY(action_id),
        FOREIGN KEY(Tamagotshi_id) REFERENCES Tamagotshi(Tamagotshi_id)
     );")
     ->addQuery("CREATE TABLE Death(
-        death_id VARCHAR(50),
+        death_id VARCHAR(50) AUTO_INCREMENT,
         death_date DATETIME,
         Tamagotshi_id INT NOT NULL,
         PRIMARY KEY(death_id),
