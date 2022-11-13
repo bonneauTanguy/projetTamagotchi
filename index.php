@@ -19,15 +19,15 @@ function migrate($db)
 {
     $migration = new Migration($db);
     $migration->addQuery("CREATE TABLE Users(
-        user_id INT AUTO_INCREMENT,
+        user_id INT,
         username VARCHAR(50),
         PRIMARY KEY(user_id)
     );")
     ->addQuery("CREATE TABLE Tamagotshi(
-        Tamagotshi_id INT AUTO_INCREMENT,
+        Tamagotshi_id INT,
         name VARCHAR(50),
-        level INT DEFAULT 1,
-        creation_date DATETIME DEFAULT NOW(),
+        level INT DEFAULT 0,
+        creation_date DATETIME DEFAULT GETDATE(),
         action_number INT DEFAULT 0,
         hunger INT DEFAULT 70,
         thirst INT DEFAULT 70,
@@ -38,15 +38,15 @@ function migrate($db)
         FOREIGN KEY(user_id) REFERENCES Users(user_id)
     );")
     ->addQuery("CREATE TABLE Actions(
-       action_id INT AUTO_INCREMENT,
+       action_id INT,
        name VARCHAR(50),
-       action_date DATETIME DEFAULT NOW(),
+       action_date DATETIME DEFAULT GETDATE(),
        Tamagotshi_id INT NOT NULL,
        PRIMARY KEY(action_id),
        FOREIGN KEY(Tamagotshi_id) REFERENCES Tamagotshi(Tamagotshi_id)
     );")
     ->addQuery("CREATE TABLE Death(
-        death_id INT AUTO_INCREMENT,
+        death_id VARCHAR(50),
         death_date DATETIME,
         Tamagotshi_id INT NOT NULL,
         PRIMARY KEY(death_id),
@@ -58,6 +58,9 @@ function migrate($db)
 /**
  * On execute tout d'abord avec migrate($db);puis on peut le commenter :)  
  */
-migrate($db);
+//migrate($db);
 ?>
-<?php require_once('./vues/v_usersTam.php'); ?>
+<?php 
+require_once('./vues/login.php'); 
+require_once('./vues/register.php');
+?>
