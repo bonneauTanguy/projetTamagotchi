@@ -1,19 +1,55 @@
 <html>
-    <H1>hello</H1>
+<div>
+ <body>
+  <link href="../style/style.css" rel="stylesheet" type="text/css">
+    <img src="../style/images/logo.png">
 
     <table>
     <thead>
         <tr>
-            <th colspan="2">The table header</th>
+            <th scope="col"> <?php echo $name ?>NAME</th> 
+
+            <th scope="col"> Soif </th>
+
+            <th scope="col"> Faim </th>
+
+            <th scope="col"> Dormir </th>
+
+            <th scope="col"> Jouer </th>
+            
+            <th scope="col"> Action </th>
+
         </tr>
     </thead>
-    <tbody>
+   
         <tr>
-            <td>The table body</td>
-            <td>with two columns</td>
+            <td>TAmTAM</td>
+            <td><?php //drink(); ?> 70</td>
+            <td><?php //eat(); ?>70</td>
+            <td><?php //bedtime(); ?>70</td>
+            <td><?php //enjoy();?>70</td>
+            <td><input class='myclass' type='button' value='Delete'/></td>
+            
+
         </tr>
-    </tbody>
+    <tfoot>
+        <tr>
+        <th scope="col"></th> 
+
+        <th scope="col"><input class='myclass' type='button' value='Soif'/></th>
+
+        <th scope="col"><input class='myclass' type='button' value='Faim'/></th>
+
+        <th scope="col"><input class='myclass' type='button' value='Dormir'/></th>
+
+        <th scope="col"><input class='myclass' type='button' value='Jouer'/></th>
+
+        <th scope="col"></th>
+
+        </tr>
+        </tfoot>
 </table>
 
-    
+</body>    
+</div>
 </html>

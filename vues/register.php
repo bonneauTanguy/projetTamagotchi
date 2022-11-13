@@ -22,6 +22,7 @@ $db->in('projet_tama');
 </head>
 
 <body>
+<link rel="stylesheet" href="./style/register.css" media="screen" type="text/css" />
     <br>
     <form action="register.php" method="post" onsubmit="return validate()">
                 
