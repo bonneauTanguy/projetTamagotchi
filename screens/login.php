@@ -7,7 +7,7 @@
         <div id="container">
            
             <form action="verification.php" method="POST">
-                <h2>Connexion</h2>
+                <h2>Connexion</h2> // call user ; 
                 
                 <h4><b>Nom d'utilisateur</b></h4>
                 <input type="text" placeholder="Username 🤗" name="username">
@@ -25,7 +25,7 @@
             </form>
         <form action="creationAccount.php" method="POST">
                 
-                <h2>Register</h2>
+                <h2>Register</h2> call add_account ; 
 
                 <input type="text" placeholder="Entrer your username!😍" name="username" required>
                 <input type="text" placeholder="Name your first Tamagotchi!😋" name="username" required>
