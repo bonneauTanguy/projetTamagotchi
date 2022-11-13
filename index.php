@@ -9,7 +9,7 @@ require_once('./bdd/Migration.class.php');
 $db = new Database([
     "projet_tama" => [
         "username" => "root",
-        "password" => "flycombo123",
+        "password" => "29031999",
         "dbname" => "projet_tama"
     ]
 ]);
@@ -60,4 +60,4 @@ function migrate($db)
  */
 //migrate($db);
 ?>
-<?php require_once('./vues/v_loginregister.php'); ?>
+<?php require_once('./vues/v_usersTam.php'); ?>

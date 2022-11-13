@@ -43,50 +43,7 @@ class Database {
     {
         return [];
     }
-    /**
-     * Met à jour une ligne dans la BDD
-     */
-    public function update(string $table, array $fields, array $wheres = []) : int
-    {
-        // Un test vraiment simpliste pour éviter les injections.
-        // Une table ne peut pas en théorie (ou ne devrait pas) avoir d'espace.
-        if(strpos($table, " ") !== false) {
-            // Non.
-            throw new InvalidArgumentException("Une table ne doit pas avoir d'espace");
-        }
-
-        // Ici, c'est une sorte de QueryBuilder
-        // Une partie de notre code qui crée une requête
-        // Ca pourrait être une classe et des objets à côté
-        $sql = "UPDATE " . $table . " SET ";
-        foreach(array_keys($fields) as $fieldKey) {
-            $sql .= "`" . $fieldKey . "` = ?,";
-        }
-        $sql = rtrim($sql, ",") . " WHERE ";
-
-        $whereKeys = array_keys($wheres);
-        foreach($whereKeys as $i => $whereKey) {
-            $sql .= "`" . $whereKey . "` = ? ";
-            // Tant que ce n'est pas le dernier
-            if($i != count($whereKeys) - 1) {
-                $sql = " AND ";
-            }
-        }
-        $sql = rtrim($sql, " ") . ";";
-
-        $arguments = array_merge(
-            array_values($fields), // ["Toto", "2022-11..."]
-            array_values($wheres) // ["Action"]
-        );
-
-        $stmt = $this->getPDO()->prepare($sql);
-        $stmt->execute($arguments);
-        return $stmt->rowCount();
-
-        // UPDATE table <- table
-        // SET clef = valeur, clef = valeur, clef = valeur... <- modifications, array
-        // WHERE clef = valeur AND clef = valeur AND clef = valeur... <- conditions, array
-    }
+   
     /**
      * Supprime une ligne dans la BDD
      */
@@ -97,46 +54,6 @@ class Database {
     /**
      * Récupère des résultats dans la BDD
      * Equivalent à SELECT * sans LIMIT
-     */
-    public function list(string $table) : array
-    {
-        // Un test vraiment simpliste pour éviter les injections.
-        // Une table ne peut pas en théorie (ou ne devrait pas) avoir d'espace.
-        if(strpos($table, " ") !== false) {
-            // Non.
-            throw new InvalidArgumentException("Une table ne doit pas avoir d'espace");
-        }
-        
-        // Système de cache : nom du fichier contenant les résultats de la requête
-        //$filename = realpath('.') . DIRECTORY_SEPARATOR . md5($table) . ".cache.txt";
-        // Si ce fichier existe, on renvoie son contenu
-        // if(file_exists($filename)) {
-        //     return json_decode(file_get_contents($filename));
-        // }
-
-        // SELECT * FROM [table]
-        $stmt = $this->getPDO()->prepare("SELECT * FROM " . $table);
-        $stmt->execute();
-        
-        // On stocke le contenu de la requête dans un fichier
-        // pour accélérer les requêtes suivantes
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        //file_put_contents($filename, json_encode($results));
-
-        // On retourne les résultats
-        return $results;
-    }
-
-    public function listClass(string $table, string $className) : array
-    {
-        // Sans système de cache pour ne pas complexifier
-        $stmt = $this->getPDO()->prepare("SELECT * FROM " . $table);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_CLASS, $className);
-    }
-    /**
-     * Exécute une requête SQL DML "en brut" dans la BDD
-     * Data Manipulation Language
      */
     public function rawSelect(string $sql, array $args = []) : array
     {
