@@ -155,16 +155,43 @@ class Database {
         // Pas de fetch ou fetchAll ici, il s'agit de création/modification de table
     }
     //creation d'un compte
-    public function create_account(string $username)
+    public function create_account(string $username, string $name)
     {
         $stmt = $this->getPDO()->prepare("
-        CREATE PROCEDURE create_account(IN username CHAR(50))
+        CREATE PROCEDURE create_account(IN username CHAR(50), IN name CHAR(50), IN user_id INT)
         BEGIN
+            DECLARE @user_id INT
             INSERT INTO Users(username) VALUES(". $username .");
+            SET @user_id = 
+                (SELECT user_id
+                FROM Users
+                WHERE username = ". $username .")
+            INSERT INTO Tamagotshi(name, user_id) VALUES(". $name .", @user_id);
         END; 
         ");
         $stmt->execute();
         $create_account = $this->getPDO()->query("call create_account");
+        $create_account->execute();
+    }
+    //creation d'un tamagotshi
+    public function create_tamagotshi(string $name)
+    {
+        //on récupère l'utilisateur afin de faire une requete SQL pour récupérer son id
+        // et ainsi pourvoir liée le nouveau tamagotshi à l'utilisateur
+        $current_user = get_current_user();
+        $stmt = $this->getPDO()->prepare("
+        CREATE PROCEDURE create_tamagotshi(IN name CHAR(50), IN user_id INT)
+        BEGIN
+
+            SET @user_id = 
+                (SELECT user_id
+                FROM Users
+                WHERE username = ". $current_user .")
+            INSERT INTO Tamagotshi(name, user_id) VALUES(". $name .", @user_id);
+        END; 
+        ");
+        $stmt->execute();
+        $create_account = $this->getPDO()->query("call create_tamagotshi");
         $create_account->execute();
     }
 }
