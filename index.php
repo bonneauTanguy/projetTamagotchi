@@ -46,7 +46,7 @@ function migrate($db)
        FOREIGN KEY(Tamagotshi_id) REFERENCES Tamagotshi(Tamagotshi_id)
     );")
     ->addQuery("CREATE TABLE Death(
-        death_id VARCHAR(50) AUTO_INCREMENT,
+        death_id INT AUTO_INCREMENT,
         death_date DATETIME DEFAULT NOW(),
         Tamagotshi_id INT NOT NULL,
         PRIMARY KEY(death_id),
