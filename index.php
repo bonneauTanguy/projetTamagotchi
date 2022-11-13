@@ -26,7 +26,7 @@ function migrate($db)
     ->addQuery("CREATE TABLE Tamagotshi(
         Tamagotshi_id INT AUTO_INCREMENT,
         name VARCHAR(50),
-        level INT DEFAULT 0,
+        level INT DEFAULT 1,
         creation_date DATETIME DEFAULT NOW(),
         action_number INT DEFAULT 0,
         hunger INT DEFAULT 70,
