@@ -88,9 +88,10 @@ class Database {
         END; 
         ");
         $stmt->execute();
-        $create_account = $this->getPDO()->query("call create_account");
-        $create_account->execute();
+        $call_procedure = $this->getPDO()->query("call create_account");
+        $call_procedure->execute();
     }
+
     //creation d'un tamagotshi
     public function create_tamagotshi(string $name)
     {
@@ -109,7 +110,63 @@ class Database {
         END; 
         ");
         $stmt->execute();
-        $create_account = $this->getPDO()->query("call create_tamagotshi");
-        $create_account->execute();
+        $call_procedure = $this->getPDO()->query("call create_account");
+        $call_procedure->execute();
+    }
+
+    //fonction appelée quand l'utilisateur nourrit le Tamagotshi
+    public function eat(INT $Tamagotshi_id){
+        //dans la table action on ajoute une ligne avec le nom de l'action et l'id du tamagotshi qui effectue l'action
+        $stmt = $this->getPDO()->prepare("
+        CREATE PROCEDURE eat(IN tamagotshi_id INT)
+            BEGIN
+                INSERT INTO Actions (name, Tamagotshi_id) VALUES ('EAT',". $Tamagotshi_id .");
+            END;
+            ");
+        $stmt->execute();
+        $call_procedure = $this->getPDO()->query("call create_account");
+        $call_procedure->execute();
+    }
+
+    //fonction appelée quand l'utilisateur fait boire le Tamagotshi
+    public function drink(INT $Tamagotshi_id){
+        //dans la table action on ajoute une ligne avec le nom de l'action et l'id du tamagotshi qui effectue l'action
+        $stmt = $this->getPDO()->prepare("
+        CREATE PROCEDURE drink(IN tamagotshi_id INT)
+            BEGIN
+                INSERT INTO Actions (name, Tamagotshi_id) VALUES ('DRINK',". $Tamagotshi_id .");
+            END;
+            ");
+        $stmt->execute();
+        $call_procedure = $this->getPDO()->query("call create_account");
+        $call_procedure->execute();
+    }
+
+    //fonction appelée quand l'utilisateur fait dormir le Tamagotshi
+    public function bedtime(INT $Tamagotshi_id){
+        //dans la table action on ajoute une ligne avec le nom de l'action et l'id du tamagotshi qui effectue l'action
+        $stmt = $this->getPDO()->prepare("
+        CREATE PROCEDURE bedtime(IN tamagotshi_id INT)
+            BEGIN
+                INSERT INTO Actions (name, Tamagotshi_id) VALUES ('BEDTIME',". $Tamagotshi_id .");
+            END;
+            ");
+        $stmt->execute();
+        $call_procedure = $this->getPDO()->query("call create_account");
+        $call_procedure->execute();
+    }
+
+    //fonction appelée quand l'utilisateur divertit le Tamagotshi
+    public function enjoy(INT $Tamagotshi_id){
+        //dans la table action on ajoute une ligne avec le nom de l'action et l'id du tamagotshi qui effectue l'action
+        $stmt = $this->getPDO()->prepare("
+        CREATE PROCEDURE enjoy(IN tamagotshi_id INT)
+            BEGIN
+                INSERT INTO Actions (name, Tamagotshi_id) VALUES ('ENJOY',". $Tamagotshi_id .");
+            END;
+            ");
+        $stmt->execute();
+        $call_procedure = $this->getPDO()->query("call create_account");
+        $call_procedure->execute();
     }
 }
