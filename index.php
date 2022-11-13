@@ -40,7 +40,7 @@ function migrate($db)
     ->addQuery("CREATE TABLE Actions(
        action_id INT,
        name VARCHAR(50),
-       action_date DATETIME,
+       action_date DATETIME DEFAULT GETDATE(),
        Tamagotshi_id INT NOT NULL,
        PRIMARY KEY(action_id),
        FOREIGN KEY(Tamagotshi_id) REFERENCES Tamagotshi(Tamagotshi_id)
