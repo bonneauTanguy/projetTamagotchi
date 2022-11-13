@@ -201,4 +201,135 @@ class Database {
         $call_procedure = $this->getPDO()->query("call IS_ALIVE");
         $call_procedure->execute();
     }
+    //Trigger permettant de modifier les statistiques du tamagotshi lorsqu'une ligne est ajouter dans la table Actions
+    public function ins_actions (INT $Tamagotshi_id){
+        $stmt = $this->getPDO()->prepare("
+        DELIMITER //
+
+        CREATE TRIGGER ins_actions 
+        BEFORE INSERT 
+        ON actions FOR EACH ROW
+        BEGIN
+            DECLARE oldTamagotshiParameter INTEGER;
+            DECLARE oldTamagotshiLevel INTEGER;
+        
+            DECLARE death_tamagotshi INTEGER;
+        
+            select is_alive(NEW.Tamagotshi_id) INTO death_tamagotshi;
+
+            IF death_tamagotshi = 0 THEN
+        
+                -- Récupération du level
+                SELECT level INTO oldTamagotshiLevel FROM tamagotshi WHERE ". $Tamagotshi_id ." = NEW.Tamagotshi_id;
+            
+                -- Faim
+                IF strcmp(NEW.name, 'EAT') = 0 THEN
+                    SELECT hunger INTO oldTamagotshiParameter FROM tamagotshi WHERE ". $Tamagotshi_id ." = NEW.Tamagotshi_id;
+                    IF oldTamagotshiParameter <= 80 THEN
+                    
+                        UPDATE tamagotshi SET 
+                            hunger = hunger + (30 + (oldTamagotshiLevel - 1)),
+                            thirst = thirst - (10 + (oldTamagotshiLevel - 1)),
+                            sleep = sleep - (5 + (oldTamagotshiLevel - 1)),
+                            boredom = boredom - (5 + (oldTamagotshiLevel - 1))
+                        WHERE ". $Tamagotshi_id ." = NEW.Tamagotshi_id;
+                
+                        -- Stat pas au dessus de 100
+                        IF oldTamagotshiParameter + (30 + (oldTamagotshiLevel - 1)) > 100 THEN
+                        UPDATE tamagotshi SET sleep = 100 WHERE ". $Tamagotshi_id ." = NEW.Tamagotshi_id;
+                    END IF;
+                END IF;
+            END IF;
+
+            -- Soif
+            IF strcmp(NEW.name, 'DRINK') = 0 THEN
+                SELECT thirst INTO oldTamagotshiParameter FROM tamagotshi WHERE ". $Tamagotshi_id ." = NEW.Tamagotshi_id;
+                IF oldTamagotshiParameter <= 80 THEN
+                    
+                    UPDATE tamagotshi SET 
+                        hunger = hunger - (10 + (oldTamagotshiLevel - 1)),
+                        thirst = thirst + (30 + (oldTamagotshiLevel - 1)),
+                        sleep = sleep - (5 + (oldTamagotshiLevel - 1)),
+                        boredom = boredom - (5 + (oldTamagotshiLevel - 1))
+                    WHERE ". $Tamagotshi_id ." = NEW.Tamagotshi_id;
+                
+                    -- Stat pas au dessus de 100
+                    IF oldTamagotshiParameter + (30 + (oldTamagotshiLevel - 1)) > 100 THEN
+                        UPDATE tamagotshi SET sleep = 100 WHERE ". $Tamagotshi_id ." = NEW.Tamagotshi_id;
+                    END IF;
+                END IF;
+            END IF;
+        
+            -- Dormir
+            IF strcmp(NEW.name, 'BEDTIME') = 0 THEN
+                SELECT sleep INTO oldTamagotshiParameter FROM tamagotshi WHERE ". $Tamagotshi_id ." = NEW.Tamagotshi_id;
+                IF oldTamagotshiParameter <= 80 THEN
+                    
+                    UPDATE tamagotshi SET 
+                        hunger = hunger - (10 + (oldTamagotshiLevel - 1)),
+                        thirst = thirst - (15 + (oldTamagotshiLevel - 1)),
+                        sleep = sleep + (30 + (oldTamagotshiLevel - 1)),
+                        boredom = boredom - (15 + (oldTamagotshiLevel - 1))
+                    WHERE ". $Tamagotshi_id ." = NEW.Tamagotshi_id;
+                
+                    -- Stat pas au dessus de 100
+                    IF oldTamagotshiParameter + (30 + (oldTamagotshiLevel - 1)) > 100 THEN
+                        UPDATE tamagotshi SET sleep = 100 WHERE ". $Tamagotshi_id ." = NEW.Tamagotshi_id;
+                    END IF;
+                END IF;
+            END IF;
+        
+            -- Jouer
+            IF strcmp(NEW.name, 'ENJOY') = 0 THEN
+                SELECT boredom INTO oldTamagotshiParameter FROM tamagotshi WHERE ". $Tamagotshi_id ." = NEW.Tamagotshi_id;
+                IF oldTamagotshiParameter <= 80 THEN
+                    
+                    UPDATE tamagotshi SET 
+                        hunger = hunger - (5 + (oldTamagotshiLevel - 1)),
+                        thirst = thirst - (5 + (oldTamagotshiLevel - 1)),
+                        sleep = sleep - (5 + (oldTamagotshiLevel - 1)),
+                        boredom = boredom + (15 + (oldTamagotshiLevel - 1))
+                    WHERE ". $Tamagotshi_id ." = NEW.Tamagotshi_id;
+                
+                    -- Stat pas au dessus de 100
+                    IF oldTamagotshiParameter + (15 + (oldTamagotshiLevel - 1)) > 100 THEN
+                        UPDATE tamagotshi SET sleep = 100 WHERE ". $Tamagotshi_id ." = NEW.Tamagotshi_id;
+                    END IF;
+                END IF;
+            
+        end if;
+        
+            -- Monter de level
+            IF oldTamagotshiParameter <= 80 THEN
+                UPDATE tamagotshi SET level = ((SELECT COUNT(*) FROM actions WHERE ". $Tamagotshi_id ." = NEW.Tamagotshi_id) DIV 10 + 1) WHERE ". $Tamagotshi_id ." = NEW.Tamagotshi_id;
+            END IF;
+        
+        END IF;	
+		
+        END// ");
+    }
+
+    //Trigger permettant d'ajouter le tamagotshi dans la table Death lorsque une des statistiques est à 0
+    public function after_actions (INT $Tamagotshi_id){
+        $stmt = $this->getPDO()->prepare("
+        DELIMITER //
+
+        CREATE TRIGGER after_actions 
+        AFTER INSERT 
+        ON actions FOR EACH ROW
+        BEGIN
+            DECLARE tama_hunger INTEGER;
+            DECLARE tama_thrink INTEGER;
+            DECLARE tama_sleep INTEGER;
+            DECLARE tama_boredom INTEGER;
+        
+            SELECT hunger, thrink, sleep, boredom into tama_hunger, tama_thrink, tama_sleep, tama_boredom
+            FROM tamagotshi
+            WHERE Tamagotshi_id = NEW.Tamagotshi_id;
+        
+            IF (tama_hunger <= 0 OR tama_thrink <= 0 OR tama_sleep <= 0 OR tama_boredom <= 0) THEN
+                INSERT INTO death (Tamagotshi_id) VALUES (NEW.Tamagotshi_id);
+            END IF;
+        END");
+    }
 }
