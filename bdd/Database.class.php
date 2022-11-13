@@ -154,4 +154,17 @@ class Database {
         return $stmt->execute($args);
         // Pas de fetch ou fetchAll ici, il s'agit de création/modification de table
     }
+    //creation d'un compte
+    public function create_account(string $username)
+    {
+        $stmt = $this->getPDO()->prepare("
+        CREATE PROCEDURE create_account(IN username CHAR(50))
+        BEGIN
+            INSERT INTO Users(username) VALUES(". $username .");
+        END; 
+        ");
+        $stmt->execute();
+        $create_account = $this->getPDO()->query("call create_account");
+        $create_account->execute();
+    }
 }
