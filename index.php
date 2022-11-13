@@ -8,8 +8,8 @@ require_once('./bdd/Migration.class.php');
 // Point de départ, création des migrations
 $db = new Database([
     "projet_tama" => [
-        "username" => "root",
-        "password" => "29031999",
+        "username" => "",
+        "password" => "",
         "dbname" => "projet_tama"
     ]
 ]);
