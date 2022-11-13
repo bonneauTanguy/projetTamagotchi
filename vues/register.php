@@ -1,13 +1,8 @@
-
 <?php
 // Start PHP session at the beginning 
 session_start();
 
-
-    require_once ("./bdd/Database.class.php");
-
-    create_account($username, $name);
-
+require_once ("./bdd/Database.class.php");
 
 $db = new Database([
     "projet_tama" => [
@@ -18,8 +13,7 @@ $db = new Database([
 ]);
 $db->in('projet_tama');
 
-
-
+// create_account($username, $name);
 ?>
 
 <html>
@@ -29,7 +23,7 @@ $db->in('projet_tama');
 
 <body>
     <br>
-    <form action="register.php" method="post" name="form1">
+    <form action="register.php" method="post" onsubmit="return validate()">
                 
                 <h2>Register</h2>
 

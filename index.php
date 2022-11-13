@@ -63,4 +63,6 @@ function migrate($db)
 <?php 
 require_once('./vues/login.php'); 
 require_once('./vues/register.php');
+require_once('./vues/v_usersTams.php');
+
 ?>

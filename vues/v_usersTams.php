@@ -1,16 +1,19 @@
-<?php
-session_start();
-
-// This page can be accessed only after login
-// Redirect user to login page, if user username is not available in session
-if (!isset($_SESSION["username"])) {
-    header("location: login.php");
-}
-?>
-
 <html>
     <H1>hello</H1>
 
-    
+    <table>
+    <thead>
+        <tr>
+            <th colspan="2">The table header</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>The table body</td>
+            <td>with two columns</td>
+        </tr>
+    </tbody>
+</table>
+
     
 </html>
