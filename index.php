@@ -47,7 +47,7 @@ function migrate($db)
     );")
     ->addQuery("CREATE TABLE Death(
         death_id VARCHAR(50) AUTO_INCREMENT,
-        death_date DATETIME,
+        death_date DATETIME DEFAULT NOW(),
         Tamagotshi_id INT NOT NULL,
         PRIMARY KEY(death_id),
         UNIQUE(Tamagotshi_id),
